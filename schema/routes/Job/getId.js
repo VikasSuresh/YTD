@@ -18,9 +18,11 @@ const Get = async(req,res,next)=>{
 
     if (error) return res.status(400).send('400 Bad Request!');
 
-    const Job = mongoose.model('Job').lean();
+    const Job = mongoose.model('Job');
 
     const data = await Job.findOne({_id:mongoose.mongo.ObjectId(fileId)}).lean();
+
+    if(!data) return res.status(404).send("Not Found!");
 
     if(data.status === 'Completed'){
         return res.status(200).download(path.resolve(process.cwd(),data.fileLocation));
