@@ -27,7 +27,7 @@ const Post =  async (req,res,next)=>{
 
         const exist =  await Job.findOne({
             url,
-        });
+        }).lean();
 
         if(exist){
             if(exist.status === 'Completed'){
