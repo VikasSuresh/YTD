@@ -13,15 +13,31 @@ async function add(){
 
     if(rawResponse.status === 200){
         URL.value = "";
-        await get();
+        $( "#downloads" ).load(window.location.href + " #downloads" );
     }
     else {
-        console.log(1)
         URL.className += " " + "is-invalid";
     }
      
 }  
 
-async function get(){
-    $( "#downloads" ).load(window.location.href + " #downloads" );
+async function download(id){
+    const rawResponse = await fetch(`http://localhost:3000/${id}`, {
+        method: 'GET',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+        }
+    });
+
+    const row = document.getElementById(id);
+
+    if(rawResponse.status === 403){
+        row.className = "btn btn-warning"
+    }
+
+    if(rawResponse.status === 200){
+        row.className = "btn btn-success"
+        window.location.href = `http://localhost:3000/${id}`; 
+    }
 }

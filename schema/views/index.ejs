@@ -48,9 +48,11 @@
           <% downloads.map(download=> { %>
               <div class="row px-3 align-items-center todo-item rounded">
                 <div class="col px-1 m-1 d-flex align-items-center">
-                    <input type="text" class="form-control form-control-lg border-0  bg-transparent rounded px-3 key = "<%= download._id %>"
+                    <input type="text"
+                    class="form-control form-control-lg border-0  bg-transparent rounded px-3" 
                     readonly value= "<%= download.url %>"  />
-                    <button class="btn"> <i class="bi bi-download"></i> </button>
+                    <button class="btn btn-danger" id = "<%= download._id %>" 
+                    onclick="download('<%= download._id %>')"> <i class="bi bi-download"></i> </button>
                 </div>
               </div>
           <% }); %>
