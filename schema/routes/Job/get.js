@@ -6,9 +6,7 @@ const Get = async(req,res,next)=>{
 
     const data = await Job.find({}).lean();
 
-    return res.status(200).send({
-      data
-    })
+    res.render('index',{ downloads:data });
   } catch (error) {
         return next(error)
   }

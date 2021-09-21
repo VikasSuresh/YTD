@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/',require('../index'));
+router.get('/healthCheck',require('../index'));
 
-router.use('/jobs',require('./Job'));
+router.use('/',require('./Job'));
 
 module.exports = router;
