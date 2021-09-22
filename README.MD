@@ -18,6 +18,6 @@ npm start
 2. Used Bull package for job-queue.
 3. Used ytdl-core package for downloading video.
 4. Used EJS for now as front-end.
-5. Copy and Paste any Video Url and wait till the video is processed.
+5. Copy and Paste any YT Video Url and wait till the video is processed.
 6. Click on the download button to Download.
 
