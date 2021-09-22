@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     status:{
         type:"String",
         enum:[
-            'Started', 'Cancelled', 'Completed','Errored'
+            'Started','Completed','Errored'
         ],
         index:true,
         required:true
