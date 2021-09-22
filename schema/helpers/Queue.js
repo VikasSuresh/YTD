@@ -5,6 +5,8 @@ const uuid = require('uuid').v4;
 const mongoose= require('mongoose');
 
 module.exports = () =>{
+    const Job = mongoose.model('Job');
+
     const videoQueue = new Queue('video transcoding', {
         redis: {
             port: process.env.REDIS_PORT,
@@ -13,12 +15,12 @@ module.exports = () =>{
     });
 
     videoQueue.process(async(job,done)=>{
+        const randomFileId = uuid();
+        const fileName =  `./files/${randomFileId}.mp4`;
         const data = job.data;
         try {
             job.progress(0)
             global.io.emit('progress',{ progress: 0, jobId: data.id })
-            const randomFileId = uuid();
-            const fileName =  `./files/${randomFileId}.mp4`;
     
             const promise = new Promise((resolve,reject)=>{
                 ytdl(data.url).on("progress",(length,downloaded,totalLength)=>{
@@ -40,7 +42,7 @@ module.exports = () =>{
                 })  
             })
 
-            const Job = mongoose.model('Job');
+            
 
             promise.then(async ()=>{
                 await Job.findOneAndUpdate({_id:mongoose.mongo.ObjectId(data.id)},{
@@ -48,18 +50,26 @@ module.exports = () =>{
                     fileLocation: fileName,
                 },{upsert:false})
         
-            }).catch(async (err)=> {
-                await Job.findOneAndUpdate({_id:mongoose.mongo.ObjectId(data.id)},{
-                    status: 'Errored',
-                    fileLocation: fileName,
-                },{upsert:false})
+            }).catch(async (error)=> {
+                await err(Job,data.id,fileName)
             })
             
             done();    
         } catch (error) {
-            throw new Error(error)
+            await err(Job,data.id,fileName)
         }
     });
 
     return videoQueue;
+}
+
+const err = async (Job, id,fileName) =>{
+    try {
+        await Job.findOneAndUpdate({_id:mongoose.mongo.ObjectId(id)},{
+            status: 'Errored',
+            fileLocation: fileName,
+        },{upsert:false})
+    } catch (error) {
+        console.log(error)
+    }
 }
