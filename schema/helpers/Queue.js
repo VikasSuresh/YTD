@@ -23,9 +23,9 @@ module.exports = () =>{
             const promise = new Promise((resolve,reject)=>{
                 ytdl(data.url).on("progress",(length,downloaded,totalLength)=>{
                     const progress = (downloaded / totalLength) * 100;
-    
-                    global.io.emit('progress',{ progress, jobId: data.id })
-                    
+                    if(progress>=49 && progress<=55 ){
+                        global.io.emit('progress',{ progress, jobId: data.id })
+                    }
                     if(progress>=100){
                         global.io.emit('videoDone', { fileLocation: `${randomFileId}.mp4`, jobId: data.id });
                         global.io.emit('progress', { progress: 100, jobId: data.id });
